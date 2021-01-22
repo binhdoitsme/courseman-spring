@@ -1,7 +1,8 @@
 package com.hanu.courseman.domain.repositories;
 
-import org.springframework.stereotype.Repository;
+import com.hanu.courseman.domain.models.Student;
 
-@Repository
-public interface StudentRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface StudentRepository extends CrudRepository<Student, Long> {
 }

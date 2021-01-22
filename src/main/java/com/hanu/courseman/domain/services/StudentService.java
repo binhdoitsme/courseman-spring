@@ -1,7 +1,13 @@
 package com.hanu.courseman.domain.services;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
+import com.hanu.courseman.domain.models.Student;
+
 public interface StudentService {
+    Student createStudent(Student student);
+    Student getStudentById(int id);
+    List<Student> getAllStudents();
+    Student updateStudent(Student student);
+    void deleteStudent(Student student);
 }
