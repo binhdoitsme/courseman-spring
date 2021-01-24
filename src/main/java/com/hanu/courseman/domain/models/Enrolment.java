@@ -2,28 +2,34 @@ package com.hanu.courseman.domain.models;
 
 import java.io.Serializable;
 
-/**
- * Represent an enrolment record which includes the student, module and marks
- */
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Enrolment implements Comparable<Enrolment>, Serializable {
-    private static final long serialVersionUID = 4847626701619829578L;
+    private static final long serialVersionUID = 1L;
     // constants
     private static final double PASS_LOWER_BOUND = 4.5;
     private static final double GOOD_LOWER_BOUND = 6.5;
     private static final double EXCELLENT_LOWER_BOUND = 8.0;
 
     // fields
-    private Student student;
-    private Module module;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private double internalMark;
     private double examMark;
     private char finalGrade;
+    @ManyToOne(optional = false)
+    private Student student;
+    @ManyToOne(optional = false)
+    private Module module;
 
-    /**
-     * Construct a new enrolment without marks
-     * @param student
-     * @param module
-     */
+    public Enrolment() {}
+
     public Enrolment(Student student, Module module) {
         this.student = student;
         this.module = module;
@@ -31,78 +37,51 @@ public class Enrolment implements Comparable<Enrolment>, Serializable {
         this.examMark = -1;
     }
 
-    /**
-     * @return {@link #student}
-     */
+    public Enrolment(Long id, Student student, Module module, 
+                    double internalMark, double examMark) {
+        this.id = id;
+        this.student = student;
+        this.module = module;
+        this.internalMark = internalMark;
+        this.examMark = examMark;
+    }
+
+    public long getId() {
+        return id;
+    }
+
     public Student getStudent() {
         return this.student;
     }
 
-    /**
-     * @return {@link #module}
-     */
     public Module getModule() {
         return this.module;
     }
 
-    /**
-     * @return {@link #internalMark}
-     */
     public double getInternalMark() {
         return internalMark;
     }
 
-    /**
-     * @return {@link #examMark}
-     */
     public double getExamMark() {
         return examMark;
     }
 
-    /**
-     * @return {@link #finalGrade}
-     */
     public char getFinalGrade() {
         return finalGrade;
     }
 
-    /**
-     * @effects
-     * 
-     *          <pre>
-     *  if internalMark is invalid
-     *      throw IllegalArgumentException
-     *  else
-     *      set this.internalMark to be internalMark
-     *      update finalGrade
-     *          </pre>
-     */
     public void setInternalMark(double internalMark) {
         throwExceptionIfInvalidMark(internalMark);
         this.internalMark = internalMark;
         updateFinalGrade();
     }
 
-    /**
-     * @effects
-     * 
-     *          <pre>
-     *  if examMark is invalid
-     *      throw IllegalArgumentException
-     *  else
-     *      set this.examMark to be examMark
-     *      update finalGrade
-     *          </pre>
-     */
     public void setExamMark(double examMark) {
         throwExceptionIfInvalidMark(examMark);
         this.examMark = examMark;
         updateFinalGrade();
     }
 
-    /**
-     * Updates the final grade according to internal and exam marks
-     */
     private void updateFinalGrade() {
         if (internalMark == -1 || examMark == -1)
             return;
@@ -118,9 +97,6 @@ public class Enrolment implements Comparable<Enrolment>, Serializable {
             finalGrade = 'E';
     }
 
-    /**
-     * Calculate the aggregated mark
-     */
     private double getAggregatedMark() {
         return 0.4 * internalMark + 0.6 * examMark;
     }

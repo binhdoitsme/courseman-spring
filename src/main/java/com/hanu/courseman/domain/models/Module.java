@@ -2,55 +2,63 @@ package com.hanu.courseman.domain.models;
 
 import java.io.Serializable;
 
-/**
- * Representing a course module which is identified by code, name, semester and
- * credits
- */
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
+
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name = "module_type", 
+    discriminatorType = DiscriminatorType.INTEGER)
 public abstract class Module implements Serializable {
-    private static final long serialVersionUID = -8634060408397395452L;
+    private static final long serialVersionUID = 1L;
     
+    @Id
+    @GeneratedValue
+    private Long id;
     private String code;
     private String name;
     private int semester;
     private int credits;
 
-    /**
-     * Initialize a module with auto-incremented module code
-     */
+    public Module() {}
+
     public Module(String code, String name, int semester, int credits) {
-        if (name == null || name.length() == 0 || semester <= 0 || credits <= 0) {
-            throw new IllegalArgumentException("Invalid input! Please check again (fields with * are required)");
-        }
         this.code = code;
         this.semester = semester;
         this.name = name;
         this.credits = credits;
     }
 
-    /**
-     * @return {@link #code}
-     */
+    public Module(long id, String code, String name, int semester, int credits) {
+        this.id = id;
+        this.code = code;
+        this.semester = semester;
+        this.name = name;
+        this.credits = credits;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public String getCode() {
         return code;
     }
 
-    /**
-     * @return {@link #name}
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @return {@link #credits}
-     */
     public int getCredits() {
         return credits;
     }
 
-    /**
-     * @return {@link #semester}
-     */
     public int getSemester() {
         return semester;
     }
@@ -66,23 +74,14 @@ public abstract class Module implements Serializable {
      */
     public abstract boolean isCompulsory();
 
-    /**
-     * Set {@link #name} to be name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * Set {@link #credits} to be credits
-     */
     public void setCredits(int credits) {
         this.credits = credits;
     }
 
-    /**
-     * Set {@link #semester} to be semester
-     */
     public void setSemester(int semester) {
         this.semester = semester;
     }

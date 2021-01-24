@@ -2,7 +2,7 @@ package com.hanu.courseman.domain.repositories;
 
 import com.hanu.courseman.domain.models.Student;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface StudentRepository extends CrudRepository<Student, Long> {
+public interface StudentRepository extends PagingAndSortingRepository<Student, Long> {
 }

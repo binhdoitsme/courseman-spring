@@ -1,16 +1,23 @@
 package com.hanu.courseman.domain.models;
 
-/**
- * Represents a compulsory module which a student has to complete as the pre-condition for graduation.
- */
-public class CompulsoryModule extends Module {
-    private static final long serialVersionUID = 1818326316776604610L;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
-    /**
-     * Initialize a compulsory module with auto-incremented module code
-     */
+@Entity
+@DiscriminatorValue("1")
+public class CompulsoryModule extends Module {
+    private static final long serialVersionUID = 1L;
+
+    public CompulsoryModule() {
+        super();
+    }
+
     public CompulsoryModule(String code, String name, int semester, int credits) {
         super(code, name, semester, credits);
+    }
+
+    public CompulsoryModule(long id, String code, String name, int semester, int credits) {
+        super(id, code, name, semester, credits);
     }
 
     @Override

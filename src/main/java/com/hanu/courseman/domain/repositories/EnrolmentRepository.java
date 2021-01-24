@@ -1,4 +1,8 @@
 package com.hanu.courseman.domain.repositories;
 
-public interface EnrolmentRepository {
+import com.hanu.courseman.domain.models.Enrolment;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
+
+public interface EnrolmentRepository extends PagingAndSortingRepository<Enrolment, Long> {
 }
