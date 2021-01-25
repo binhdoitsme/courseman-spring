@@ -85,4 +85,15 @@ public abstract class Module implements Serializable {
     public void setSemester(int semester) {
         this.semester = semester;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != getClass()) return false;
+        Module that = (Module) obj;
+        return this.id.equals(that.id) 
+                && this.code.equals(that.code)
+                && this.name.equals(that.name)
+                && this.credits == that.credits
+                && this.semester == that.semester;
+    }
 }

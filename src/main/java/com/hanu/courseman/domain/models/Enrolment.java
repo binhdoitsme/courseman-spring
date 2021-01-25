@@ -19,7 +19,7 @@ public class Enrolment implements Comparable<Enrolment>, Serializable {
     // fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private double internalMark;
     private double examMark;
     private char finalGrade;
@@ -46,7 +46,7 @@ public class Enrolment implements Comparable<Enrolment>, Serializable {
         this.examMark = examMark;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -122,5 +122,12 @@ public class Enrolment implements Comparable<Enrolment>, Serializable {
     @Override
     public int compareTo(Enrolment o) {
         return student.getId().compareTo(o.student.getId());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != getClass()) return false;
+        Enrolment that = (Enrolment) obj;
+        return this.module.equals(that.module) && this.student.equals(that.student);
     }
 }

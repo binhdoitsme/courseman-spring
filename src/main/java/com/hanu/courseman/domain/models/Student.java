@@ -52,6 +52,10 @@ public class Student implements Serializable {
         this.name = name;
     }
 
+    public Collection<Enrolment> getEnrolments() {
+        return enrolments;
+    }
+
     public Enrolment enrollIn(final Module module) {
         if (enrolments.stream().anyMatch(enrolment -> 
                 enrolment.getModule().equals(module))) {
@@ -79,5 +83,13 @@ public class Student implements Serializable {
 
     public void onEnrolmentUpdated(Enrolment enrolment) {
         // do something when an enrolment is updated
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != getClass()) return false;
+        Student that = (Student) obj;
+        return this.id.equals(that.id) && this.name.equals(that.name)
+                && this.enrolments.equals(that.enrolments);
     }
 }

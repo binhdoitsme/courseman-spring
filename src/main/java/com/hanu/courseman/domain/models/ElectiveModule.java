@@ -44,4 +44,11 @@ public class ElectiveModule extends Module {
         return String.format("ElectiveModule:<code=%s,name=%s,credits=%s,semester=%s,departmentName=%s>", 
                             getCode(), getName(), getCredits(), getSemester(), getDepartmentName());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != getClass()) return false;
+        ElectiveModule that = (ElectiveModule) obj;
+        return super.equals(obj) && this.departmentName.equals(that.departmentName);
+    }
 }
