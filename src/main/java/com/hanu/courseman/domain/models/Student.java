@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Optional;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -14,17 +15,23 @@ public class Student implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue
     private Long id;
     private String name;
     @OneToMany(mappedBy = "student")
     private Collection<Enrolment> enrolments;
 
-    public Student() {}
+    public Student() {
+        this.enrolments = new LinkedList<>();
+    }
+
+    public Student(String name) {
+        this.name = name;
+    }
 
     public Student(long id, String name) {
         this.id = id;
         this.name = name;
-        this.enrolments = new LinkedList<>();
     }
 
     public Student(long id, String name, Collection<Enrolment> enrolments) {
@@ -60,7 +67,7 @@ public class Student implements Serializable {
         final Optional<Enrolment> enrolmentToModule = enrolments.stream()
                 .filter(enrolment -> enrolment.getModule().equals(module))
                 .findFirst();
-        if (enrolmentToModule.isEmpty()) {
+        if (!enrolmentToModule.isPresent()) {
             throw new IllegalArgumentException(
                 String.format("Student %s has not enrolled in module %s!", this, module)
             );

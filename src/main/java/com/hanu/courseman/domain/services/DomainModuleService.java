@@ -1,6 +1,7 @@
 package com.hanu.courseman.domain.services;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -33,13 +34,14 @@ public class DomainModuleService implements ModuleService {
 
     @Override
     public Module getEntityById(Long id) {
-        return moduleRepository.findById(id).orElseThrow();
+        return moduleRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException());
     }
 
     @Override
     public Collection<Module> getAllEntities() {
         return StreamSupport.stream(moduleRepository.findAll().spliterator(), false)
-                    .collect(Collectors.toUnmodifiableList());
+                    .collect(Collectors.toList());
     }
 
     @Override
@@ -47,10 +49,10 @@ public class DomainModuleService implements ModuleService {
         // validate page and itemPerPage
         final long count = moduleRepository.count();
         if (itemPerPage * (pageNumber - 1) > count) {
-            throw new IllegalArgumentException("The current page does not exist!");
+            throw new NoSuchElementException("The current page does not exist!");
         }
         return moduleRepository.findAll(PageRequest.of(pageNumber - 1, itemPerPage))
-                        .get().collect(Collectors.toUnmodifiableList());
+                        .get().collect(Collectors.toList());
     }
 
     @Override
@@ -62,7 +64,7 @@ public class DomainModuleService implements ModuleService {
     private void throwExceptionIfNotExist(Module entity) {
         if (entity.getId() == null 
             || !moduleRepository.existsById(entity.getId())) {
-            throw new IllegalArgumentException(
+            throw new NoSuchElementException(
                 "Cannot update Module! Reason: code does not exist!");
         }
     }
