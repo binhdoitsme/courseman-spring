@@ -15,14 +15,14 @@ import com.hanu.courseman.domain.models.Module;
 import org.springframework.boot.jackson.JsonComponent;
 
 @JsonComponent
-public class ModuleRequestBodyMapper extends StdDeserializer<Module> {
+public class ModuleDeserializer extends StdDeserializer<Module> {
     private static final long serialVersionUID = 1L;
 
-    public ModuleRequestBodyMapper() {
+    public ModuleDeserializer() {
         this(Module.class);
     }
 
-    protected ModuleRequestBodyMapper(Class<Module> clazz) {
+    protected ModuleDeserializer(Class<Module> clazz) {
         super(clazz);
     }
 

@@ -3,6 +3,7 @@ package com.hanu.courseman.application.spring;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
+import com.hanu.courseman.application.spring.exceptions.NotCreatedByServerException;
 import com.hanu.courseman.application.spring.exceptions.NotDeletedByServerException;
 import com.hanu.courseman.application.spring.exceptions.NotFoundException;
 import com.hanu.courseman.application.spring.exceptions.NotUpdatedByServerException;
@@ -44,9 +45,12 @@ public class EnrolmentController {
     }
 
     @PostMapping
-    public Enrolment createEnrolment(@RequestParam("student") long studentId,
-                                    @RequestParam("module") long moduleId) {
-        
+    public Enrolment createEnrolment(@RequestBody Enrolment enrolment) {
+        try {
+            return enrolmentService.createEntity(enrolment);
+        } catch (RuntimeException ex) {
+            throw new NotCreatedByServerException();
+        }
     }
 
     @GetMapping("/{id}")

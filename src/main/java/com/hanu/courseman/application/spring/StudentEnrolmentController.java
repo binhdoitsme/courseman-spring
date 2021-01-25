@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @ResponseBody
-@RequestMapping("/{id}/enrolments")
+@RequestMapping("/students/{id}/enrolments")
 public class StudentEnrolmentController {
 
     private final EnrolmentService enrolmentService;
@@ -41,10 +41,14 @@ public class StudentEnrolmentController {
     @GetMapping
     public Collection<Enrolment> getEnrolmentsByStudent(
                                     @PathVariable("id") Long studentId) {
-        return enrolmentService.getEnrolmentsByStudentId(studentId);
+        try {
+            return studentService.getEntityById(studentId).getEnrolments();
+        } catch (NoSuchElementException ex) {
+            throw new NotFoundException();
+        }
     }
 
-    @PostMapping
+    @PostMapping("/{moduleId}")
     public Enrolment createEnrolment(@PathVariable("id") Long studentId,
                                      @PathVariable("moduleId") Long moduleId) {
         try {

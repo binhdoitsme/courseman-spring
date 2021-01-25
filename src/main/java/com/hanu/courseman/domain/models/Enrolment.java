@@ -70,6 +70,14 @@ public class Enrolment implements Comparable<Enrolment>, Serializable {
         return finalGrade;
     }
 
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
+    }
+
     public void setInternalMark(double internalMark) {
         throwExceptionIfInvalidMark(internalMark);
         this.internalMark = internalMark;

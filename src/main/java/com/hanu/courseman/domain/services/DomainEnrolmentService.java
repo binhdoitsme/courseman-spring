@@ -10,8 +10,6 @@ import com.hanu.courseman.domain.models.Enrolment;
 import com.hanu.courseman.domain.models.Module;
 import com.hanu.courseman.domain.models.Student;
 import com.hanu.courseman.domain.repositories.EnrolmentRepository;
-import com.hanu.courseman.domain.repositories.ModuleRepository;
-import com.hanu.courseman.domain.repositories.StudentRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,17 +19,10 @@ import org.springframework.stereotype.Service;
 public class DomainEnrolmentService implements EnrolmentService {
 
     private final EnrolmentRepository enrolmentRepository;
-    private final StudentRepository studentRepository;
-    private final ModuleRepository moduleRepository;
 
     @Autowired
-    public DomainEnrolmentService(
-            EnrolmentRepository enrolmentRepository,
-            StudentRepository studentRepository,
-            ModuleRepository moduleRepository) {
+    public DomainEnrolmentService(EnrolmentRepository enrolmentRepository) {
         this.enrolmentRepository = enrolmentRepository;
-        this.studentRepository = studentRepository;
-        this.moduleRepository = moduleRepository;
     }
 
     @Override
@@ -87,20 +78,8 @@ public class DomainEnrolmentService implements EnrolmentService {
     }
 
     @Override
-    public Collection<Enrolment> getEnrolmentsByStudentId(Long studentId) {
-        return studentRepository.findById(studentId).get().getEnrolments();
-    }
-
-    @Override
     public Enrolment createEnrolment(Student student, Module module) {
         Enrolment enrolment = student.enrollIn(module);
         return createEntity(enrolment);
     }
-
-    @Override
-    public Enrolment createEnrolment(long studentId, long moduleId) {
-        // TODO: complete this
-        return null;
-    }
-    
 }
