@@ -1,6 +1,7 @@
 package com.hanu.courseman.domain.models;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -22,6 +23,8 @@ public class Student implements Serializable {
     @GeneratedValue
     private Long id;
     private String name;
+    private Date dob;
+
     @OneToMany(mappedBy = "student")
     @JsonIgnoreProperties("student")
     private Collection<Enrolment> enrolments;
@@ -53,8 +56,16 @@ public class Student implements Serializable {
         return name;
     }
 
+    public Date getDob() {
+        return dob;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 
     public Collection<Enrolment> getEnrolments() {
