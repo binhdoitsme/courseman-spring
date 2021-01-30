@@ -5,6 +5,8 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import com.hanu.courseman.domain.models.CompulsoryModule;
+import com.hanu.courseman.domain.models.ElectiveModule;
 import com.hanu.courseman.domain.models.Module;
 import com.hanu.courseman.domain.repositories.ModuleRepository;
 
@@ -73,5 +75,34 @@ public class DomainModuleService implements ModuleService {
     public void deleteEntity(Module entity) {
         throwExceptionIfNotExist(entity);
         moduleRepository.delete(entity);
+    }
+
+    @Override
+    public Collection<Module> getEntityListByType(String type) {
+        switch (type) {
+            case "compulsory":
+                return StreamSupport.stream(moduleRepository.findAll().spliterator(), false)
+                        .filter(module -> module.getClass() == CompulsoryModule.class)
+                        .collect(Collectors.toList());
+            case "elective":
+                return StreamSupport.stream(moduleRepository.findAll().spliterator(), false)
+                        .filter(module -> module.getClass() == ElectiveModule.class)
+                        .collect(Collectors.toList());
+            default:
+                throw new IllegalArgumentException("Not found type = " + type);
+        }
+    }
+
+    @Override
+    public Collection<Module> getEntityListByTypeAndPage(String type, 
+                                                        int pageNumber, int itemPerPage) {
+        final long count = moduleRepository.count();
+        if (itemPerPage * (pageNumber - 1) > count) {
+            throw new NoSuchElementException("The current page does not exist!");
+        }
+        return getEntityListByType(type).stream()
+                .skip(itemPerPage * (pageNumber - 1))
+                .limit(itemPerPage)
+                .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,7 @@ package com.hanu.courseman.application.spring;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import com.hanu.courseman.application.spring.exceptions.NotCreatedByServerException;
 import com.hanu.courseman.application.spring.exceptions.NotDeletedByServerException;
@@ -45,7 +46,15 @@ public class ModuleController {
     @GetMapping
     public Collection<Module> getAllModules(
             @RequestParam(value = "page", defaultValue = "1") int pageNumber,
-            @RequestParam(value = "count", defaultValue = "20") int itemPerPage) {
+            @RequestParam(value = "count", defaultValue = "20") int itemPerPage,
+            @RequestParam(value = "type", required = false) String type) {
+        if (!Objects.isNull(type)) {
+            try {
+                return moduleService.getEntityListByTypeAndPage(type, pageNumber, itemPerPage);
+            } catch (IllegalArgumentException ex) {
+                throw new NotFoundException();
+            }
+        }
         try {
             return moduleService.getEntityListByPage(pageNumber, itemPerPage);
         } catch (IllegalArgumentException ex) {
