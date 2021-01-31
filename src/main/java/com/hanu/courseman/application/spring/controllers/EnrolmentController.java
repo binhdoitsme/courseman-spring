@@ -1,13 +1,14 @@
-package com.hanu.courseman.application.spring;
+package com.hanu.courseman.application.spring.controllers;
 
-import java.util.Collection;
 import java.util.NoSuchElementException;
 
 import com.hanu.courseman.application.spring.exceptions.NotCreatedByServerException;
 import com.hanu.courseman.application.spring.exceptions.NotDeletedByServerException;
 import com.hanu.courseman.application.spring.exceptions.NotFoundException;
-import com.hanu.courseman.domain.models.Student;
-import com.hanu.courseman.domain.services.StudentService;
+import com.hanu.courseman.application.spring.exceptions.NotUpdatedByServerException;
+import com.hanu.courseman.domain.models.Enrolment;
+import com.hanu.courseman.domain.services.EnrolmentService;
+import com.hanu.courseman.domain.services.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,70 +25,65 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @ResponseBody
-@RequestMapping("/students")
+@RequestMapping("/enrolments")
 @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
-public class StudentController {
-    private final StudentService studentService;
+public class EnrolmentController {
+    private final EnrolmentService enrolmentService;
 
     @Autowired
-    public StudentController(StudentService service) {
-        this.studentService = service;
-    }
-
-    @GetMapping("/draft")
-    public void createFirstEntity() {
-        studentService.createEntity(new Student("BinhDH"));
+    public EnrolmentController(EnrolmentService service) {
+        this.enrolmentService = service;
     }
 
     @GetMapping
-    public Collection<Student> getAllStudents(
+    public Page<Enrolment> getAllEnrolments(
             @RequestParam(value = "page", defaultValue = "1") int pageNumber,
             @RequestParam(value = "count", defaultValue = "20") int itemPerPage) {
         try {
-            return studentService.getEntityListByPage(pageNumber, itemPerPage);
+            return enrolmentService.getEntityListByPage(pageNumber, itemPerPage);
         } catch (IllegalArgumentException ex) {
             throw new NotFoundException();
         }
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
+    public Enrolment createEnrolment(@RequestBody Enrolment enrolment) {
         try {
-            return studentService.createEntity(student);
+            return enrolmentService.createEntity(enrolment);
         } catch (RuntimeException ex) {
             throw new NotCreatedByServerException();
         }
     }
 
     @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable("id") Long id) {
+    public Enrolment getEnrolmentById(@PathVariable("id") Long id) {
         try {
-            return studentService.getEntityById(id);
+            return enrolmentService.getEntityById(id);
         } catch (NoSuchElementException ex) {
             throw new NotFoundException();
         }
     }
     
     @PatchMapping("/{id}")
-    public Student updateStudent(@PathVariable("id") Long id,
-                                @RequestBody Student student) {
+    public Enrolment updateEnrolment(@PathVariable("id") Long id,
+                                @RequestBody Enrolment enrolment) {
         try {
-            if (id != student.getId()) {
+            if (id != enrolment.getId()) {
                 throw new IllegalArgumentException();
             }
-            return studentService.updateEntity(student);
+            return enrolmentService.updateEntity(enrolment);
         } catch (NoSuchElementException ex) {
             throw new NotFoundException();
         } catch (RuntimeException ex) {
-            throw new NotDeletedByServerException();
+            throw new NotUpdatedByServerException();
         }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable("id") Long id) {
+    public void deleteEnrolment(@PathVariable("id") Long id) {
         try {
-            Student student = studentService.getEntityById(id);
-            studentService.deleteEntity(student);
+            Enrolment enrolment = enrolmentService.getEntityById(id);
+            enrolmentService.deleteEntity(enrolment);
         } catch (NoSuchElementException ex) {
             throw new NotFoundException();
         } catch (RuntimeException ex) {

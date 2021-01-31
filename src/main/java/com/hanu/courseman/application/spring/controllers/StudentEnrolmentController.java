@@ -1,4 +1,4 @@
-package com.hanu.courseman.application.spring;
+package com.hanu.courseman.application.spring.controllers;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;

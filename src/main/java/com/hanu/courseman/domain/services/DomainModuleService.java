@@ -47,14 +47,18 @@ public class DomainModuleService implements ModuleService {
     }
 
     @Override
-    public Collection<Module> getEntityListByPage(int pageNumber, int itemPerPage) {
+    public Page<Module> getEntityListByPage(int pageNumber, int itemPerPage) {
         // validate page and itemPerPage
         final long count = moduleRepository.count();
+        final int pageCount = (int)count / itemPerPage + (count % itemPerPage != 0 ? 1 : 0);
         if (itemPerPage * (pageNumber - 1) > count) {
             throw new NoSuchElementException("The current page does not exist!");
         }
-        return moduleRepository.findAll(PageRequest.of(pageNumber - 1, itemPerPage))
-                        .get().collect(Collectors.toList());
+        Collection<Module> content = moduleRepository
+            .findAll(PageRequest.of(pageNumber - 1, itemPerPage))
+            .get()
+            .collect(Collectors.toList());
+        return new Page<>(pageNumber, pageCount, content);
     }
 
     @Override
@@ -94,15 +98,18 @@ public class DomainModuleService implements ModuleService {
     }
 
     @Override
-    public Collection<Module> getEntityListByTypeAndPage(String type, 
-                                                        int pageNumber, int itemPerPage) {
-        final long count = moduleRepository.count();
+    public Page<Module> getEntityListByTypeAndPage(String type, int pageNumber, 
+                                                   int itemPerPage) {
+        final Collection<Module> fromRepo = getEntityListByType(type);
+        final long count = fromRepo.size();
+        final int pageCount = (int)count / itemPerPage + (count % itemPerPage != 0 ? 1 : 0);
         if (itemPerPage * (pageNumber - 1) > count) {
             throw new NoSuchElementException("The current page does not exist!");
         }
-        return getEntityListByType(type).stream()
+        final Collection<Module> content = fromRepo.stream()
                 .skip(itemPerPage * (pageNumber - 1))
                 .limit(itemPerPage)
                 .collect(Collectors.toList());
+        return new Page<>(pageNumber, pageCount, content);
     }
 }

@@ -1,6 +1,5 @@
-package com.hanu.courseman.application.spring;
+package com.hanu.courseman.application.spring.controllers;
 
-import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -11,6 +10,7 @@ import com.hanu.courseman.application.spring.exceptions.NotUpdatedByServerExcept
 import com.hanu.courseman.domain.models.ElectiveModule;
 import com.hanu.courseman.domain.models.Module;
 import com.hanu.courseman.domain.services.ModuleService;
+import com.hanu.courseman.domain.services.Page;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,7 +44,7 @@ public class ModuleController {
     }
 
     @GetMapping
-    public Collection<Module> getAllModules(
+    public Page<Module> getAllModules(
             @RequestParam(value = "page", defaultValue = "1") int pageNumber,
             @RequestParam(value = "count", defaultValue = "20") int itemPerPage,
             @RequestParam(value = "type", required = false) String type) {

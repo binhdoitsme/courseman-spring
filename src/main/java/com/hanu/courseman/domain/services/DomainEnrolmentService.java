@@ -49,14 +49,17 @@ public class DomainEnrolmentService implements EnrolmentService {
     }
 
     @Override
-    public Collection<Enrolment> getEntityListByPage(int pageNumber, int itemPerPage) {
+    public Page<Enrolment> getEntityListByPage(int pageNumber, int itemPerPage) {
         // validate page and itemPerPage
         final long count = enrolmentRepository.count();
+        final int pageCount = (int)count / itemPerPage + (count % itemPerPage != 0 ? 1 : 0);
         if (itemPerPage * (pageNumber - 1) > count) {
             throw new NoSuchElementException("The current page does not exist!");
         }
-        return enrolmentRepository.findAll(PageRequest.of(pageNumber - 1, itemPerPage)).get()
+        final Collection<Enrolment> content = enrolmentRepository
+                .findAll(PageRequest.of(pageNumber - 1, itemPerPage)).get()
                 .collect(Collectors.toList());
+        return new Page<>(pageNumber, pageCount, content);
     }
 
     @Override
