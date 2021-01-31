@@ -20,21 +20,23 @@ public class Enrolment implements Comparable<Enrolment>, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private double internalMark;
-    private double examMark;
+    private Double internalMark;
+    private Double examMark;
     private char finalGrade;
     @ManyToOne(optional = false)
     private Student student;
     @ManyToOne(optional = false)
     private Module module;
 
-    public Enrolment() {}
+    public Enrolment() {
+        this.internalMark = -1.0;
+        this.examMark = -1.0;
+    }
 
     public Enrolment(Student student, Module module) {
+        this();
         this.student = student;
         this.module = module;
-        this.internalMark = -1;
-        this.examMark = -1;
     }
 
     public Enrolment(Long id, Student student, Module module, 
@@ -78,13 +80,19 @@ public class Enrolment implements Comparable<Enrolment>, Serializable {
         this.module = module;
     }
 
-    public void setInternalMark(double internalMark) {
+    public void setInternalMark(Double internalMark) {
+        if (internalMark == null) {
+            return;
+        }
         throwExceptionIfInvalidMark(internalMark);
         this.internalMark = internalMark;
         updateFinalGrade();
     }
 
-    public void setExamMark(double examMark) {
+    public void setExamMark(Double examMark) {
+        if (examMark == null) {
+            return;
+        }
         throwExceptionIfInvalidMark(examMark);
         this.examMark = examMark;
         updateFinalGrade();
