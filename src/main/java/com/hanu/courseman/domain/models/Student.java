@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
@@ -26,7 +25,6 @@ public class Student implements Serializable {
     private Date dob;
 
     @OneToMany(mappedBy = "student")
-    @JsonIgnoreProperties("student")
     private Collection<Enrolment> enrolments;
 
     public Student() {
