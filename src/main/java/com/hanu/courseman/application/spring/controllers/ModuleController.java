@@ -3,6 +3,7 @@ package com.hanu.courseman.application.spring.controllers;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+import com.hanu.courseman.application.spring.annotations.ServiceController;
 import com.hanu.courseman.application.spring.exceptions.NotCreatedByServerException;
 import com.hanu.courseman.application.spring.exceptions.NotDeletedByServerException;
 import com.hanu.courseman.application.spring.exceptions.NotFoundException;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @ResponseBody
 @RequestMapping("/modules")
+@ServiceController("Manage course modules")
 @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:3000"})
 public class ModuleController {
     private final ModuleService moduleService;
